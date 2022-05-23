@@ -75,13 +75,13 @@ var PosPrinter = /** @class */ (function () {
             var window_print_error = null; // The error returned if the printing fails
             var timeOutPerline = options.timeOutPerLine ? options.timeOutPerLine : 400;
             if (!options.preview || !options.silent) {
-                setTimeout(function () {
-                    if (!printedState) {
-                        var errorMsg = window_print_error ? window_print_error : 'TimedOut';
-                        reject(errorMsg);
-                        printedState = true;
-                    }
-                }, timeOutPerline * data.length + 200);
+                // setTimeout(() => {
+                //     if (!printedState) {
+                //         const errorMsg = window_print_error ? window_print_error: 'TimedOut';
+                //         reject(errorMsg);
+                //         printedState = true;
+                //     }
+                // }, timeOutPerline * data.length + 200);
             }
             // open electron window
             var mainWindow = new BrowserWindow({
