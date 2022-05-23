@@ -178,24 +178,29 @@ var PosPrinter = /** @class */ (function () {
             data.forEach(function (line, lineIndex) { return __awaiter(_this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0:
-                            if (line.type === 'image' && !line.path) {
-                                window.close();
-                                reject(new Error('An Image path is required for type image').toString());
-                                return [2 /*return*/];
-                            }
-                            return [4 /*yield*/, sendIpcMsg('render-line', window.webContents, { line: line, lineIndex: lineIndex })
-                                    .then(function (result) {
-                                    if (!result.status) {
-                                        window.close();
-                                        reject(result.error);
-                                        return;
-                                    }
-                                }).catch(function (error) {
-                                    reject(error);
+                        case 0: 
+                        // if (line.type === 'image' && !line.path) {
+                        //     window.close();
+                        //     reject(new Error('An Image path is required for type image').toString());
+                        //     return;
+                        // }
+                        return [4 /*yield*/, sendIpcMsg('render-line', window.webContents, { line: line, lineIndex: lineIndex })
+                                .then(function (result) {
+                                if (!result.status) {
+                                    window.close();
+                                    reject(result.error);
                                     return;
-                                })];
+                                }
+                            }).catch(function (error) {
+                                reject(error);
+                                return;
+                            })];
                         case 1:
+                            // if (line.type === 'image' && !line.path) {
+                            //     window.close();
+                            //     reject(new Error('An Image path is required for type image').toString());
+                            //     return;
+                            // }
                             _a.sent();
                             return [2 /*return*/];
                     }

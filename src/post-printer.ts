@@ -121,11 +121,11 @@ export class PosPrinter {
     private static renderPrintDocument(window: any, data: PosPrintData[]): Promise<any> {
         return new Promise((resolve, reject) => {
             data.forEach(async (line, lineIndex) => {
-                if (line.type === 'image' && !line.path) {
-                    window.close();
-                    reject(new Error('An Image path is required for type image').toString());
-                    return;
-                }
+                // if (line.type === 'image' && !line.path) {
+                //     window.close();
+                //     reject(new Error('An Image path is required for type image').toString());
+                //     return;
+                // }
                 await sendIpcMsg('render-line', window.webContents, {line, lineIndex})
                     .then((result: any) => {
                         if (!result.status) {
