@@ -38,13 +38,13 @@ export class PosPrinter {
             let window_print_error = null; // The error returned if the printing fails
             let timeOutPerline = options.timeOutPerLine ? options.timeOutPerLine : 400;
             if (!options.preview || !options.silent) {
-                setTimeout(() => {
-                    if (!printedState) {
-                        const errorMsg = window_print_error ? window_print_error: 'TimedOut';
-                        reject(errorMsg);
-                        printedState = true;
-                    }
-                }, timeOutPerline * data.length + 200);
+                // setTimeout(() => {
+                //     if (!printedState) {
+                //         const errorMsg = window_print_error ? window_print_error: 'TimedOut';
+                //         reject(errorMsg);
+                //         printedState = true;
+                //     }
+                // }, timeOutPerline * data.length + 200);
             }
             // open electron window
             let mainWindow = new BrowserWindow({
