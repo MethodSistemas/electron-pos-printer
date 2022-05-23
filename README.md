@@ -9,24 +9,24 @@ requires electron >= 4.x.x.
 
 ### Installation
 ```bash
-$ npm install electron-pos-printer
-$ yarn add electron-pos-printer
+$ npm install method-electron-pos-printer
+$ yarn add method-electron-pos-printer
 ```
 ### Usage
 #### In main process
 ```js
-const {PosPrinter} = require("electron-pos-printer");
+const {PosPrinter} = require("method-electron-pos-printer");
 ```
 #### In render process
 ```js
-const {PosPrinter} = require('electron').remote.require("electron-pos-printer");
+const {PosPrinter} = require('electron').remote.require("method-electron-pos-printer");
 ```
 ### Demo
 
 Check out this [Demo](https://github.com/fssonca/electron-printer ) by [fssonca](https://github.com/fssonca) 
 
 ```js
-const {PosPrinter} = require("electron-pos-printer");
+const {PosPrinter} = require("method-electron-pos-printer");
 const path = require("path");
 
 const options = {
@@ -125,7 +125,7 @@ PosPrinter.print(data, options)
 ### Usage
 
 ```typescript
-import {PosPrinter, PosPrintData, PosPrintOptions} from "electron-pos-printer";
+import {PosPrinter, PosPrintData, PosPrintOptions} from "method-electron-pos-printer";
 import * as path from "path";
 
 const options: PosPrintOptions = {

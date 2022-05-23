@@ -41,7 +41,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PosPrinter = void 0;
 if (process.type == 'renderer') {
-    throw new Error('electron-pos-printer: use remote.require("electron-pos-printer") in render process');
+    throw new Error('method-electron-pos-printer: use remote.require("method-electron-pos-printer") in render process');
 }
 var _a = require('electron'), BrowserWindow = _a.BrowserWindow, ipcMain = _a.ipcMain;
 // ipcMain.on('pos-print', (event, arg)=> {

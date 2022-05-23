@@ -1,6 +1,6 @@
 {
-  "name": "electron-pos-printer",
-  "version": "1.2.4",
+  "name": "method-electron-pos-printer",
+  "version": "1.2.5",
   "description": "Electron thermal 58mm printer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,9 @@
     "pack": "webpack --config ./webpack.config.js",
     "build": "tsc",
     "test:all": "mocha -R mocha-jenkins-reporter --timeout 20000 \"./src/test/**/*test-*.js\"",
-    "test:one": "mocha --watch -u bdd \"./src/test/**/test-*.js\" --grep \"test-login-form\""
+    "test:one": "mocha --watch -u bdd \"./src/test/**/test-*.js\" --grep \"test-login-form\"",
+    "prepare": "npm run co:login",
+    "co:login": "aws codeartifact login --tool npm --repository method-electron-pos-printer --domain methodsistemas --domain-owner 773260350781"
   },
   "repository": {
     "type": "git",
