@@ -40,10 +40,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PosPrinter = void 0;
-if (process.type == 'renderer') {
+if (process.type == "renderer") {
     throw new Error('method-electron-pos-printer: use remote.require("method-electron-pos-printer") in render process');
 }
-var _a = require('electron'), BrowserWindow = _a.BrowserWindow, ipcMain = _a.ipcMain;
+var _a = require("electron"), BrowserWindow = _a.BrowserWindow, ipcMain = _a.ipcMain;
 // ipcMain.on('pos-print', (event, arg)=> {
 //     const {data, options} = JSON.parse(arg);
 //     PosPrinter.print(data, options).then((arg)=>{
@@ -68,12 +68,14 @@ var PosPrinter = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             // reject if printer name is not set in no preview mode
             if (!options.preview && !options.printerName) {
-                reject(new Error('A printer name is required').toString());
+                reject(new Error("A printer name is required").toString());
             }
             // else
             var printedState = false; // If the job has been printer or not
             var window_print_error = null; // The error returned if the printing fails
-            var timeOutPerline = options.timeOutPerLine ? options.timeOutPerLine : 400;
+            var timeOutPerline = options.timeOutPerLine
+                ? options.timeOutPerLine
+                : 400;
             if (!options.preview || !options.silent) {
                 // setTimeout(() => {
                 //     if (!printedState) {
@@ -90,21 +92,21 @@ var PosPrinter = /** @class */ (function () {
                 show: !!options.preview,
                 webPreferences: {
                     nodeIntegration: true,
-                    contextIsolation: false
-                }
+                    contextIsolation: false,
+                },
             });
             // mainWindow
-            mainWindow.on('closed', function () {
+            mainWindow.on("closed", function () {
                 mainWindow = null;
             });
             /*mainWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'print.html'),
-                protocol: 'file:',
-                slashes: true,
-                // baseUrl: 'dist'
-            }));*/
-            mainWindow.loadFile(__dirname + '/pos.html');
-            mainWindow.webContents.on('did-finish-load', function () { return __awaiter(_this, void 0, void 0, function () {
+                      pathname: path.join(__dirname, 'print.html'),
+                      protocol: 'file:',
+                      slashes: true,
+                      // baseUrl: 'dist'
+                  }));*/
+            mainWindow.loadFile(__dirname + "/pos.html");
+            mainWindow.webContents.on("did-finish-load", function () { return __awaiter(_this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0: 
@@ -117,7 +119,7 @@ var PosPrinter = /** @class */ (function () {
                         //     return;
                         // }
                         // else start initialize render prcess page
-                        return [4 /*yield*/, sendIpcMsg('body-init', mainWindow.webContents, options)];
+                        return [4 /*yield*/, sendIpcMsg("body-init", mainWindow.webContents, options)];
                         case 1:
                             // get system printers
                             // const system_printers = mainWindow.webContents.getPrinters();
@@ -135,13 +137,15 @@ var PosPrinter = /** @class */ (function () {
                              */
                             return [2 /*return*/, PosPrinter.renderPrintDocument(mainWindow, data)
                                     .then(function () {
+                                    var _a;
                                     if (!options.preview) {
                                         mainWindow.webContents.print({
                                             silent: !!options.silent,
                                             printBackground: true,
                                             deviceName: options.printerName,
                                             copies: options.copies ? options.copies : 1,
-                                            pageSize: options.pageSize ? options.pageSize : 'A4'
+                                            scaleFactor: (_a = options.scaleFactor) !== null && _a !== void 0 ? _a : 100,
+                                            pageSize: options.pageSize ? options.pageSize : "A4",
                                         }, function (arg, err) {
                                             // console.log(arg, err);
                                             if (err) {
@@ -171,7 +175,7 @@ var PosPrinter = /** @class */ (function () {
      * @Return {Promise}
      * @description Render the print data in the render process
      *
-    */
+     */
     PosPrinter.renderPrintDocument = function (window, data) {
         var _this = this;
         return new Promise(function (resolve, reject) {
@@ -184,14 +188,15 @@ var PosPrinter = /** @class */ (function () {
                         //     reject(new Error('An Image path is required for type image').toString());
                         //     return;
                         // }
-                        return [4 /*yield*/, sendIpcMsg('render-line', window.webContents, { line: line, lineIndex: lineIndex })
+                        return [4 /*yield*/, sendIpcMsg("render-line", window.webContents, { line: line, lineIndex: lineIndex })
                                 .then(function (result) {
                                 if (!result.status) {
                                     window.close();
                                     reject(result.error);
                                     return;
                                 }
-                            }).catch(function (error) {
+                            })
+                                .catch(function (error) {
                                 reject(error);
                                 return;
                             })];
@@ -207,7 +212,7 @@ var PosPrinter = /** @class */ (function () {
                 });
             }); });
             // when the render process is done rendering the page, resolve
-            resolve({ message: 'page-rendered' });
+            resolve({ message: "page-rendered" });
         });
     };
     return PosPrinter;
@@ -217,7 +222,7 @@ exports.PosPrinter = PosPrinter;
  * @function sendMsg
  * @description Sends messages to the render process to render the data specified in the PostPrintDate interface and recieves a status of true
  *
-*/
+ */
 function sendIpcMsg(channel, webContents, arg) {
     return new Promise(function (resolve, reject) {
         ipcMain.once(channel + "-reply", function (event, result) {
