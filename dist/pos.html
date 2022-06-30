@@ -17,7 +17,7 @@
         .barcode-container::after{content: '';display: table;clear: both;}
         .font {font-size: 12px; margin: 0 15px;}
 
-        table {
+        .table {
             width: 100%;
             display: table;
             border-collapse: collapse;
@@ -25,21 +25,21 @@
             font-family: monospace, cursive;
         }
 
-        table tbody {
-            border-top: 1px solid #999;
+        .table tbody {
+            border-top: 0px solid #999;
         }
 
-        table th, table td {
+        .table th, .table td {
             padding: 7px 2px;
         }
 
-        table tr {
-            border-bottom: 1px dotted #999;
+        .table tr {
+            border-bottom: 0px dotted #999;
             padding: 5px 0;
             text-align: center;
         }
 
-        table img {
+        .table img {
             max-height: 40px;
         }
         .input-text {
@@ -57,7 +57,18 @@
             background: none;
             appearance: none;
             border: none;
+            overflow: hidden;
             cursor: pointer;
+        }
+
+        .textColumn {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        .textColumn td {
+            vertical-align: top;
         }
     </style>
 </head>

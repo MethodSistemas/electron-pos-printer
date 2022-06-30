@@ -178,42 +178,53 @@ var PosPrinter = /** @class */ (function () {
      */
     PosPrinter.renderPrintDocument = function (window, data) {
         var _this = this;
-        return new Promise(function (resolve, reject) {
-            data.forEach(function (line, lineIndex) { return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: 
-                        // if (line.type === 'image' && !line.path) {
-                        //     window.close();
-                        //     reject(new Error('An Image path is required for type image').toString());
-                        //     return;
-                        // }
-                        return [4 /*yield*/, sendIpcMsg("render-line", window.webContents, { line: line, lineIndex: lineIndex })
-                                .then(function (result) {
-                                if (!result.status) {
-                                    window.close();
-                                    reject(result.error);
-                                    return;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var promises;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        promises = data.map(function (line, lineIndex) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: 
+                                    // if (line.type === 'image' && !line.path) {
+                                    //     window.close();
+                                    //     reject(new Error('An Image path is required for type image').toString());
+                                    //     return;
+                                    // }
+                                    return [4 /*yield*/, sendIpcMsg("render-line", window.webContents, { line: line, lineIndex: lineIndex })
+                                            .then(function (result) {
+                                            if (!result.status) {
+                                                window.close();
+                                                reject(result.error);
+                                                return;
+                                            }
+                                        })
+                                            .catch(function (error) {
+                                            reject(error);
+                                            return;
+                                        })];
+                                    case 1:
+                                        // if (line.type === 'image' && !line.path) {
+                                        //     window.close();
+                                        //     reject(new Error('An Image path is required for type image').toString());
+                                        //     return;
+                                        // }
+                                        _a.sent();
+                                        return [2 /*return*/];
                                 }
-                            })
-                                .catch(function (error) {
-                                reject(error);
-                                return;
-                            })];
-                        case 1:
-                            // if (line.type === 'image' && !line.path) {
-                            //     window.close();
-                            //     reject(new Error('An Image path is required for type image').toString());
-                            //     return;
-                            // }
-                            _a.sent();
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
-            // when the render process is done rendering the page, resolve
-            resolve({ message: "page-rendered" });
-        });
+                            });
+                        }); });
+                        return [4 /*yield*/, Promise.all(promises)];
+                    case 1:
+                        _a.sent();
+                        // when the render process is done rendering the page, resolve
+                        resolve({ message: "page-rendered" });
+                        return [2 /*return*/];
+                }
+            });
+        }); });
     };
     return PosPrinter;
 }());

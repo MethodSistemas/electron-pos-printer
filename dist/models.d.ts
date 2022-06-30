@@ -69,4 +69,4 @@ export interface PosPrintData {
  * @type PosPrintType
  * @name PosPrintType
  * **/
-export declare type PosPrintType = "text" | "barCode" | "qrCode" | "image" | "table";
+export declare type PosPrintType = "text" | "barCode" | "qrCode" | "image" | "table" | "text-column";

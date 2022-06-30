@@ -79,4 +79,5 @@ export declare type PosPrintType =
   | "barCode"
   | "qrCode"
   | "image"
-  | "table";
+  | "table"
+  | "text-column";

@@ -132,8 +132,8 @@ export class PosPrinter {
     window: any,
     data: PosPrintData[]
   ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      data.forEach(async (line, lineIndex) => {
+    return new Promise(async (resolve, reject) => {
+      const promises = data.map(async (line, lineIndex) => {
         // if (line.type === 'image' && !line.path) {
         //     window.close();
         //     reject(new Error('An Image path is required for type image').toString());
@@ -152,6 +152,9 @@ export class PosPrinter {
             return;
           });
       });
+
+      await Promise.all(promises);
+
       // when the render process is done rendering the page, resolve
       resolve({ message: "page-rendered" });
     });

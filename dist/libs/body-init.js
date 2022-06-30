@@ -35,11 +35,11 @@ ipcRender.on("body-init", function (event, arg) {
   event.sender.send("body-init-reply", { status: true, error: null });
 });
 // render each line
-ipcRender.on("render-line", function (event, arg) {
-  renderDataToHTML(event, arg);
+ipcRender.on("render-line", async (event, arg) => {
+  await renderDataToHTML(event, arg);
 });
 
-async function renderDataToHTML(event, arg) {
+const renderDataToHTML = async (event, arg) => {
   switch (arg.line.type) {
     case "text":
       try {
@@ -118,12 +118,65 @@ async function renderDataToHTML(event, arg) {
         });
       }
       return;
+    case "text-column":
+      // Creating table
+      const tTable = $(
+        `<table id="textColumn${arg.lineIndex}" class="textColumn" style="${arg.line.style};"></table>`
+      );
+      if (arg.line.css) {
+        for (const key in arg.line.css) {
+          const item = arg.line.css[key];
+          tTable.css(key, item);
+        }
+      }
+
+      // 2. Body
+      if (arg.line.tableBody) {
+        const tRow = $("<tr></tr>");
+        const promiseTBody = arg.line.tableBody.map(async (bodyRow) => {
+          const tCol = $(`<td></td>`);
+          const promisesRow = bodyRow.map(async (colArg) => {
+            if (typeof colArg === "object") {
+              switch (colArg.type) {
+                case "image":
+                  await getImageFromPath(colArg)
+                    .then((img) => {
+                      tCol.append(img);
+                    })
+                    .catch((e) => {
+                      event.sender.send("render-line-reply", {
+                        status: false,
+                        error: e.toString(),
+                      });
+                    });
+                  break;
+                case "text":
+                  tCol.append(generatePageText(colArg));
+                  break;
+              }
+            } else {
+              tCol.append(`<span>${colArg}</span>`);
+            }
+          });
+          await Promise.all(promisesRow);
+          tRow.append(tCol);
+        });
+
+        await Promise.all(promiseTBody);
+        tTable.append(tRow);
+        body.append(tTable);
+        console.log(tTable);
+      }
+
+      // send
+      event.sender.send("render-line-reply", { status: true, error: null });
+      return;
     case "table":
       // Creating table
       const tableContainer = $(`
                <div></div>`);
       const table = $(
-        `<table id="table${arg.lineIndex}" style="${arg.line.style}"></table>`
+        `<table id="table${arg.lineIndex}" class="table" style="${arg.line.style}"></table>`
       );
       if (arg.line.css) {
         for (const key in arg.line.css) {
@@ -235,7 +288,7 @@ async function renderDataToHTML(event, arg) {
       event.sender.send("render-line-reply", { status: true, error: null });
       return;
   }
-}
+};
 /**
  * @function
  * @name generatePageText
@@ -246,7 +299,13 @@ function generatePageText(arg) {
   const text = arg.value;
   const css = arg.css;
   arg.style = arg.style ? arg.style : "";
-  const div = $(`<input class="font input-text" style="${arg.style}" value="${text}"/>`);
+  const whiteSpace = getDataStyle(arg.style, "white-space");
+
+  const div = $(
+    whiteSpace == "normal"
+      ? `<textarea class="font input-text" style="${arg.style}">${text}</textarea>`
+      : `<input class="font input-text" style="${arg.style}" value="${text}"/>`
+  );
   if (css) {
     for (const key in css) {
       const item = css[key];
@@ -255,6 +314,14 @@ function generatePageText(arg) {
   }
   return div;
 }
+
+const getDataStyle = (style, propName) => {
+  const propRegex = new RegExp(`^.*${propName}:\s*([^;}]*)[;}].*$`);
+  const test = propRegex.exec(style ?? "");
+  if (test) return test[1].trim() ?? "";
+  return "";
+};
+
 /**
  * @function
  * @name generateTableCell
