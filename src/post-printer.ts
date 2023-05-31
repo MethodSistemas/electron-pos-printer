@@ -2,15 +2,15 @@
  * Copyright (c) 2019-2020. Author Hubert Formin <hformin@gmail.com>
  */
 
-import { PosPrintData, PosPrintOptions } from './models';
+import { PosPrintData, PosPrintOptions } from "./models";
 
-if ((process as any).type == 'renderer') {
+if ((process as any).type == "renderer") {
   throw new Error(
     'method-electron-pos-printer: use remote.require("method-electron-pos-printer") in render process'
   );
 }
 
-const { BrowserWindow, ipcMain } = require('electron');
+const { BrowserWindow, ipcMain } = require("electron");
 // ipcMain.on('pos-print', (event, arg)=> {
 //     const {data, options} = JSON.parse(arg);
 //     PosPrinter.print(data, options).then((arg)=>{
@@ -35,15 +35,14 @@ export class PosPrinter {
     return new Promise((resolve, reject) => {
       // reject if printer name is not set in no preview mode
       if (!options.preview && !options.printerName) {
-        reject(new Error('A printer name is required').toString());
+        reject(new Error("A printer name is required").toString());
       }
       // else
       let printedState = false; // If the job has been printer or not
-      let window_print_error: string | null = null; // The error returned if the printing fails
-      // let timeOutPerline = options.timeOutPerLine
-      //   ? options.timeOutPerLine
-      //   : 400;
-      console.log(window_print_error);
+      let window_print_error = null; // The error returned if the printing fails
+      let timeOutPerline = options.timeOutPerLine
+        ? options.timeOutPerLine
+        : 400;
       if (!options.preview || !options.silent) {
         // setTimeout(() => {
         //     if (!printedState) {
@@ -64,7 +63,7 @@ export class PosPrinter {
         },
       });
       // mainWindow
-      mainWindow.on('closed', () => {
+      mainWindow.on("closed", () => {
         (mainWindow as any) = null;
       });
       /*mainWindow.loadURL(url.format({
@@ -73,8 +72,8 @@ export class PosPrinter {
                 slashes: true,
                 // baseUrl: 'dist'
             }));*/
-      mainWindow.loadFile(__dirname + '/pos.html');
-      mainWindow.webContents.on('did-finish-load', async () => {
+      mainWindow.loadFile(__dirname + "/pos.html");
+      mainWindow.webContents.on("did-finish-load", async () => {
         // get system printers
         // const system_printers = mainWindow.webContents.getPrinters();
         // const printer_index = system_printers.findIndex(sp => sp.name === options.printerName);
@@ -84,7 +83,7 @@ export class PosPrinter {
         //     return;
         // }
         // else start initialize render prcess page
-        await sendIpcMsg('body-init', mainWindow.webContents, options);
+        await sendIpcMsg("body-init", mainWindow.webContents, options);
         /**
          * Render print data as html in the mainwindow render process
          *
@@ -99,7 +98,7 @@ export class PosPrinter {
                   deviceName: options.printerName,
                   copies: options.copies ? options.copies : 1,
                   scaleFactor: options.scaleFactor ?? 100,
-                  pageSize: options.pageSize ? options.pageSize : 'A4',
+                  pageSize: options.pageSize ? options.pageSize : "A4",
                 },
                 (arg, err) => {
                   // console.log(arg, err);
@@ -140,7 +139,7 @@ export class PosPrinter {
         //     reject(new Error('An Image path is required for type image').toString());
         //     return;
         // }
-        await sendIpcMsg('render-line', window.webContents, { line, lineIndex })
+        await sendIpcMsg("render-line", window.webContents, { line, lineIndex })
           .then((result: any) => {
             if (!result.status) {
               window.close();
@@ -157,7 +156,7 @@ export class PosPrinter {
       await Promise.all(promises);
 
       // when the render process is done rendering the page, resolve
-      resolve({ message: 'page-rendered' });
+      resolve({ message: "page-rendered" });
     });
   }
 }
@@ -168,7 +167,7 @@ export class PosPrinter {
  */
 function sendIpcMsg(channel: any, webContents: any, arg: any) {
   return new Promise((resolve, reject) => {
-    ipcMain.once(`${channel}-reply`, function (_, result) {
+    ipcMain.once(`${channel}-reply`, function (event, result) {
       if (result.status) {
         resolve(result);
       } else {
